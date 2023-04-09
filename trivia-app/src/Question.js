@@ -1,20 +1,49 @@
-/*  This file could contain a Question component that displays the current question and shuffled answer choices. 
-This component could receive props from the App component (e.g. question, shuffledAnswers, handleAnswerSelection) 
-and use them to render the question and answer choices. */
-
 import React from 'react';
 
-const Question = ({ data }) => {
+
+const shuffleArray = (array) => {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+};
+
+const Question = ({ data, currentQuestionIndex, handleNextQuestion, handleAnswer, score }) => {
+  const handleAnswerClick = (isCorrect) => {
+    if (isCorrect) {
+      alert('Correct!');
+    } else {
+      alert('Incorrect!');
+    }
+    handleAnswer(isCorrect);
+    handleNextQuestion();
+  };
+
+  if (!data.results) return null;
+
+  if (currentQuestionIndex === data.results.length) {
+    return <h2 style={{textAlign: 'center'}}>Final Score: {score}</h2>;
+  }
+
+  const answers = [
+    ...data.results[currentQuestionIndex].incorrect_answers,
+    data.results[currentQuestionIndex].correct_answer,
+  ];
+  shuffleArray(answers);
+
   return (
     <div>
-      {data.results &&
-        data.results.map((item) => (
-          <div key={item.question}>
-            <h2>Question: {item.question}</h2>
-            <p>Correct Answer: {item.correct_answer}</p>
-            <p>Incorrect Answers: {item.incorrect_answers.join(", ")}</p>
-          </div>
-        ))}
+      <h2 style={{textAlign: 'center'}}>Question: {data.results[currentQuestionIndex].question}</h2>
+      {answers.map((answer) => (
+        <button
+          key={answer}
+          onClick={() => handleAnswerClick(answer === data.results[currentQuestionIndex].correct_answer)}
+          style={{display: "block", margin: "auto", padding: '10px'}}
+        >
+          {answer}
+        </button>
+      ))}
+      <h2 style={{textAlign: 'center'}}>Score: {score}</h2>
     </div>
   );
 };
