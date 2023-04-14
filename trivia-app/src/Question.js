@@ -1,5 +1,5 @@
 import React from 'react';
-
+import Button from '@mui/material/Button';
 
 const shuffleArray = (array) => {
   for (let i = array.length - 1; i > 0; i--) {
@@ -35,14 +35,16 @@ const Question = ({ data, currentQuestionIndex, handleNextQuestion, handleAnswer
     <div>
       <h2 style={{textAlign: 'center'}}>Question: {data.results[currentQuestionIndex].question}</h2>
       {answers.map((answer) => (
-        <button
-          key={answer}
-          onClick={() => handleAnswerClick(answer === data.results[currentQuestionIndex].correct_answer)}
-          style={{display: "block", margin: "auto", padding: '10px'}}
-        >
-          {answer}
-        </button>
-      ))}
+  <Button
+    key={answer}
+    onClick={() => handleAnswerClick(answer === data.results[currentQuestionIndex].correct_answer)}
+    variant="contained"
+    color="primary"
+    style={{display: "block", margin: "10px auto", padding: '10px'}}
+  >
+    {answer}
+  </Button>
+))}
       <h2 style={{textAlign: 'center'}}>Score: {score}</h2>
     </div>
   );
